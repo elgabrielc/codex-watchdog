@@ -30,6 +30,8 @@ Real failure this tool exists to catch: an agent once split a client module whil
 Requires Python 3.9+ and git. No dependencies to install.
 
 ```bash
+git clone https://github.com/elgabrielc/codex-watchdog.git
+cd codex-watchdog
 ./codex-watchdog --repo /path/to/your/repo
 ./codex-watchdog --repo /path/to/your/repo --rules my-rules.json --watch 240
 ```
