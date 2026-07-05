@@ -1,5 +1,5 @@
 {
-  "_comment": "Example codex-watch rules. Copy next to your repo as .codex-watch.json or into rules/local/<repo-name>.json. Every key is optional; omitted keys fall back to defaults.",
+  "_comment": "Example codex-watchdog rules. Copy next to your repo as .codex-watchdog.json or into rules/local/<repo-name>.json. Every key is optional; omitted keys fall back to defaults.",
 
   "_comment_agent_branch_prefixes": "Branches that identify agent worktrees. Only matching worktrees are observed.",
   "agent_branch_prefixes": ["codex/", "cc/", "agent/"],

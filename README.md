@@ -1,14 +1,14 @@
-# codex-watch
+# codex-watchdog
 
 **A product of [Divergent Health, Inc.](https://divergent.health) — free and open source under the [MIT License](LICENSE).**
 
-Live supervision for [OpenAI Codex](https://openai.com/codex/) agent sessions working in your git repositories. codex-watch observes what a Codex agent is doing — worktrees, branches, commits, dirty files, session activity — and checks it against rules you define, so violations surface in minutes instead of at review time.
+Live supervision for [OpenAI Codex](https://openai.com/codex/) agent sessions working in your git repositories. codex-watchdog observes what a Codex agent is doing — worktrees, branches, commits, dirty files, session activity — and checks it against rules you define, so violations surface in minutes instead of at review time.
 
 Built by Divergent Health, Inc. to supervise multi-agent builds on our own codebases; shared in the hope it is useful to anyone orchestrating agentic coding tools.
 
 ## Why
 
-Agentic coding tools are powerful and fast — and quiet. When an agent branches from a stale base, edits a file it does not own, or filters out failing tests, nothing announces it; you find out when CI fails or a reviewer catches it. All of those mistakes are visible in git and on disk the moment they happen. codex-watch makes them visible to *you*.
+Agentic coding tools are powerful and fast — and quiet. When an agent branches from a stale base, edits a file it does not own, or filters out failing tests, nothing announces it; you find out when CI fails or a reviewer catches it. All of those mistakes are visible in git and on disk the moment they happen. codex-watchdog makes them visible to *you*.
 
 Real failure this tool exists to catch: an agent once split a client module while working from a branch 40 commits behind main, silently dropping 460 lines of shipped code. A base-ancestry check at the first observation tick would have flagged it immediately.
 
@@ -30,11 +30,11 @@ Real failure this tool exists to catch: an agent once split a client module whil
 Requires Python 3.9+ and git. No dependencies to install.
 
 ```bash
-./codex-watch --repo /path/to/your/repo
-./codex-watch --repo /path/to/your/repo --rules my-rules.json --watch 240
+./codex-watchdog --repo /path/to/your/repo
+./codex-watchdog --repo /path/to/your/repo --rules my-rules.json --watch 240
 ```
 
-Rules are auto-discovered in this order: `--rules` flag, `.codex-watch.json` in the target repo root, `rules/local/<repo-name>.json`, `rules/<repo-name>.json`. Without rules, the structural checks (ancestry, dirt, commits, stall) still run.
+Rules are auto-discovered in this order: `--rules` flag, `.codex-watchdog.json` in the target repo root, `rules/local/<repo-name>.json`, `rules/<repo-name>.json`. Without rules, the structural checks (ancestry, dirt, commits, stall) still run.
 
 ## CLI
 
@@ -43,7 +43,7 @@ Rules are auto-discovered in this order: `--rules` flag, `.codex-watch.json` in 
 --rules PATH           rules JSON (see schema below)
 --base REF             upstream base ref (default: origin/main; fetched unless --no-fetch)
 --codex-home PATH      Codex home directory (default: ~/.codex)
---state PATH           state file (default: $XDG_CACHE_HOME/codex-watch/<repo-slug>.json)
+--state PATH           state file (default: $XDG_CACHE_HOME/codex-watchdog/<repo-slug>.json)
 --stall-minutes N      stall threshold (default: 60)
 --json                 machine-readable output
 --full                 report everything, not just changes since last run

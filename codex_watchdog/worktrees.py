@@ -1,6 +1,6 @@
 """Git worktree observation: enumeration, base ancestry, dirt, and diffs.
 
-Part of codex-watch, a product of Divergent Health, Inc. MIT License.
+Part of codex-watchdog, a product of Divergent Health, Inc. MIT License.
 """
 
 from __future__ import annotations

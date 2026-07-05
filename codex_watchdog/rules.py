@@ -1,6 +1,6 @@
 """Rule loading and evaluation against observed worktree state.
 
-Part of codex-watch, a product of Divergent Health, Inc. MIT License.
+Part of codex-watchdog, a product of Divergent Health, Inc. MIT License.
 """
 
 from __future__ import annotations

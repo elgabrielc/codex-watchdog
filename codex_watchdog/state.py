@@ -1,6 +1,6 @@
 """Report-by-exception state: remember the last observation, emit only deltas.
 
-Part of codex-watch, a product of Divergent Health, Inc. MIT License.
+Part of codex-watchdog, a product of Divergent Health, Inc. MIT License.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ def default_state_path(repo):
     cache_root = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
     repo = Path(repo).resolve()
     slug = repo.name + "-" + hashlib.sha1(str(repo).encode()).hexdigest()[:8]
-    return cache_root / "codex-watch" / (slug + ".json")
+    return cache_root / "codex-watchdog" / (slug + ".json")
 
 
 def load(path):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""codex-watch: live supervision for Codex agent work in git repositories.
+"""codex-watchdog: live supervision for Codex agent work in git repositories.
 
 A product of Divergent Health, Inc. Available under the MIT License (see LICENSE).
 """
@@ -11,19 +11,19 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from codex_watch import PRODUCT_TAGLINE, __version__  # noqa: E402
-from codex_watch import report as report_mod  # noqa: E402
-from codex_watch import rules as rules_mod  # noqa: E402
-from codex_watch import sessions as sessions_mod  # noqa: E402
-from codex_watch import state as state_mod  # noqa: E402
-from codex_watch import worktrees as worktrees_mod  # noqa: E402
+from codex_watchdog import PRODUCT_TAGLINE, __version__  # noqa: E402
+from codex_watchdog import report as report_mod  # noqa: E402
+from codex_watchdog import rules as rules_mod  # noqa: E402
+from codex_watchdog import sessions as sessions_mod  # noqa: E402
+from codex_watchdog import state as state_mod  # noqa: E402
+from codex_watchdog import worktrees as worktrees_mod  # noqa: E402
 
 
 def discover_rules_path(repo, explicit):
-    """Resolution order: --rules, <repo>/.codex-watch.json, rules/local/, rules/."""
+    """Resolution order: --rules, <repo>/.codex-watchdog.json, rules/local/, rules/."""
     if explicit:
         return Path(explicit)
-    in_repo = Path(repo) / ".codex-watch.json"
+    in_repo = Path(repo) / ".codex-watchdog.json"
     if in_repo.is_file():
         return in_repo
     tool_root = Path(__file__).resolve().parent
@@ -76,10 +76,10 @@ def run_once(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="codex-watch",
+        prog="codex-watchdog",
         description="Observe Codex agent worktrees and sessions; flag rule violations.",
         epilog=(
-            "codex-watch is a product of Divergent Health, Inc., "
+            "codex-watchdog is a product of Divergent Health, Inc., "
             "available under the MIT License."
         ),
     )

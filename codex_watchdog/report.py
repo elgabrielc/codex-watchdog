@@ -1,6 +1,6 @@
 """Report assembly and rendering (human text and JSON), plus exit-code policy.
 
-Part of codex-watch, a product of Divergent Health, Inc. MIT License.
+Part of codex-watchdog, a product of Divergent Health, Inc. MIT License.
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ def render_human(report, full=False):
     lines = []
     quiet = exit_code(report) == EXIT_QUIET
     lines.append(
-        f"codex-watch @ {report['generated_at']}  repo={report['repo']}  "
+        f"codex-watchdog @ {report['generated_at']}  repo={report['repo']}  "
         f"base={report['base']['ref']}@{report['base']['sha'][:9] or '?'}"
     )
 

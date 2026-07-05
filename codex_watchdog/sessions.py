@@ -1,7 +1,7 @@
 """Codex session awareness: thread index, session-log recency, process liveness.
 
 Reads only metadata (names, timestamps, sizes) -- never session content.
-Part of codex-watch, a product of Divergent Health, Inc. MIT License.
+Part of codex-watchdog, a product of Divergent Health, Inc. MIT License.
 """
 
 from __future__ import annotations

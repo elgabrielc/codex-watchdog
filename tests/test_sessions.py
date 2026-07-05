@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from codex_watch import sessions as sessions_mod  # noqa: E402
+from codex_watchdog import sessions as sessions_mod  # noqa: E402
 
 
 class SessionsTest(unittest.TestCase):

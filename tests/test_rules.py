@@ -7,8 +7,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from codex_watch.rules import evaluate, load_rules  # noqa: E402
-from codex_watch.worktrees import WorktreeStatus  # noqa: E402
+from codex_watchdog.rules import evaluate, load_rules  # noqa: E402
+from codex_watchdog.worktrees import WorktreeStatus  # noqa: E402
 
 
 def make_worktree(**overrides):
