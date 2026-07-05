@@ -1,0 +1,31 @@
+{
+  "_comment": "Example codex-watch rules. Copy next to your repo as .codex-watch.json or into rules/local/<repo-name>.json. Every key is optional; omitted keys fall back to defaults.",
+
+  "_comment_agent_branch_prefixes": "Branches that identify agent worktrees. Only matching worktrees are observed.",
+  "agent_branch_prefixes": ["codex/", "cc/", "agent/"],
+
+  "_comment_forbidden_paths": "Globs the agent must never create or modify. Any match is a violation. `*` crosses directory separators.",
+  "forbidden_paths": [
+    "package-lock.json",
+    "docs/INDEX.md",
+    "secrets/*"
+  ],
+
+  "_comment_banned_patterns": "Regexes that must not appear in lines the agent ADDS (or anywhere in new files). Classic use: test-exclusion flags that mask regressions.",
+  "banned_patterns": [
+    "--grep-invert",
+    "\\.skip\\("
+  ],
+
+  "_comment_protected_lines": "File + regex pairs. If a diff in that file touches a line matching the regex, it is a violation. Classic use: signing keys, version fields, wire-format constants.",
+  "protected_lines": [
+    { "path": "src/app.config.json", "pattern": "pubkey" },
+    { "path": "Cargo.toml", "pattern": "^version" }
+  ],
+
+  "_comment_watch_paths": "Globs that are legitimate to edit but always worth reporting. Classic use: CI workflows, architecture decision records.",
+  "watch_paths": [
+    ".github/workflows/**",
+    "docs/decisions/**"
+  ]
+}

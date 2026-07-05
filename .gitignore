@@ -1,0 +1,6 @@
+# Project-local rules describe private repositories and never enter public history
+rules/local/
+
+__pycache__/
+*.pyc
+.DS_Store

@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""codex-watch: live supervision for Codex agent work in git repositories.
+
+A product of Divergent Health, Inc. Available under the MIT License (see LICENSE).
+"""
+
+import argparse
+import sys
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from codex_watch import PRODUCT_TAGLINE, __version__  # noqa: E402
+from codex_watch import report as report_mod  # noqa: E402
+from codex_watch import rules as rules_mod  # noqa: E402
+from codex_watch import sessions as sessions_mod  # noqa: E402
+from codex_watch import state as state_mod  # noqa: E402
+from codex_watch import worktrees as worktrees_mod  # noqa: E402
+
+
+def discover_rules_path(repo, explicit):
+    """Resolution order: --rules, <repo>/.codex-watch.json, rules/local/, rules/."""
+    if explicit:
+        return Path(explicit)
+    in_repo = Path(repo) / ".codex-watch.json"
+    if in_repo.is_file():
+        return in_repo
+    tool_root = Path(__file__).resolve().parent
+    for candidate_dir in (tool_root / "rules" / "local", tool_root / "rules"):
+        candidate = candidate_dir / (Path(repo).resolve().name + ".json")
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def run_once(args):
+    rules_path = discover_rules_path(args.repo, args.rules)
+    rules = rules_mod.load_rules(rules_path)
+
+    session_info = sessions_mod.observe(codex_home=args.codex_home)
+    base_sha, observed = worktrees_mod.inspect(
+        args.repo,
+        base_ref=args.base,
+        agent_prefixes=tuple(rules["agent_branch_prefixes"]),
+        fetch=not args.no_fetch,
+    )
+
+    findings = []
+    for worktree in observed:
+        findings.extend(rules_mod.evaluate(rules, worktree))
+
+    state_path = Path(args.state) if args.state else state_mod.default_state_path(args.repo)
+    state = state_mod.load(state_path)
+    current = state_mod.fingerprint(observed, session_info)
+    changes = state_mod.diff(state.get("fingerprint", {}), current)
+    seconds_idle = state_mod.update_stall_clock(state, changes)
+    state["fingerprint"] = current
+    state_mod.save(state_path, state)
+
+    result = report_mod.build(
+        repo=args.repo,
+        base_ref=args.base,
+        base_sha=base_sha,
+        worktrees=observed,
+        session_info=session_info,
+        findings=findings,
+        changes=changes,
+        stalled_seconds=seconds_idle,
+        stall_threshold_seconds=args.stall_minutes * 60,
+    )
+    output = report_mod.render_json(result) if args.json else report_mod.render_human(result, full=args.full)
+    print(output)
+    return report_mod.exit_code(result)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="codex-watch",
+        description="Observe Codex agent worktrees and sessions; flag rule violations.",
+        epilog=(
+            "codex-watch is a product of Divergent Health, Inc., "
+            "available under the MIT License."
+        ),
+    )
+    parser.add_argument("--repo", required=True, help="repository to observe")
+    parser.add_argument("--rules", help="rules JSON path (see README for discovery order)")
+    parser.add_argument("--base", default="origin/main", help="upstream base ref")
+    parser.add_argument("--codex-home", help="Codex home directory (default: ~/.codex)")
+    parser.add_argument("--state", help="state file path override")
+    parser.add_argument("--stall-minutes", type=int, default=60)
+    parser.add_argument("--json", action="store_true", help="machine-readable output")
+    parser.add_argument("--full", action="store_true", help="report everything, not only deltas")
+    parser.add_argument("--watch", type=int, metavar="SECONDS", help="re-check on an interval")
+    parser.add_argument("--no-fetch", action="store_true", help="skip fetching the base ref")
+    parser.add_argument("--version", action="version", version=PRODUCT_TAGLINE)
+    args = parser.parse_args()
+
+    if not args.watch:
+        return run_once(args)
+
+    # Watch mode: keep observing until interrupted; the per-run exit codes are
+    # printed in-band since a long-lived process can only exit once.
+    try:
+        while True:
+            code = run_once(args)
+            print(f"-- exit {code}; next check in {args.watch}s --", flush=True)
+            time.sleep(args.watch)
+    except KeyboardInterrupt:
+        return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
