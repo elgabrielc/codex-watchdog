@@ -72,6 +72,26 @@ Exit codes: `0` nothing new · `1` notable activity (new commits, files, watch-p
 
 See [rules/examples/generic.json](rules/examples/generic.json) for a commented walkthrough of every rule type.
 
+## Use with Claude Code
+
+The repo ships a ready-made [Claude Code](https://claude.com/claude-code) skill that runs this tool as a paced supervision loop — finding triage, commit review against your repo's own plans, report-by-exception, and stop conditions that end the loop on PR handoff instead of running forever.
+
+```bash
+cp -r skills/codex-watchdog ~/.claude/skills/
+```
+
+Then invoke `/codex-watchdog` in any session, optionally naming a repository. Project-specific invariants stay in your repo's `.codex-watchdog.json`; the skill reads your project's plans and decision records at runtime.
+
+## Stability
+
+These surfaces are contracts. Changes to any of them get a version bump, a CHANGELOG entry, and a deprecation path — never a quiet edit:
+
+1. CLI flags and subcommands
+2. Exit-code semantics (`0` quiet, `1` notable, `2` violation or stall)
+3. The rules filename and schema (`.codex-watchdog.json`)
+4. The report vocabulary (`VIOLATION`, `watch`, `STALL` line prefixes)
+5. The skill name and its documented behavior (`skills/codex-watchdog`)
+
 ## What it does not do
 
 - It never modifies the observed repository, the worktrees, or the Codex session — strictly read-only.
