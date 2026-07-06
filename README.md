@@ -82,6 +82,8 @@ cp -r skills/codex-watchdog ~/.claude/skills/
 
 Then invoke `/codex-watchdog` in any session, optionally naming a repository. Project-specific invariants stay in your repo's `.codex-watchdog.json`; the skill reads your project's plans and decision records at runtime.
 
+Known Claude Code limitation: a skill installed while a session is running will not appear in the typed slash-command autocomplete until the session restarts, even though the agent can already invoke it (asking in plain words works immediately). This is a Claude Code indexing bug, not a property of this skill -- the autocomplete index is built at session startup and does not watch `~/.claude/skills/` for changes. See [anthropics/claude-code#45275](https://github.com/anthropics/claude-code/issues/45275) and [#29005](https://github.com/anthropics/claude-code/issues/29005). Restarting the session is the reliable fix; `/reload-plugins` reportedly does not rebuild the command index ([#37862](https://github.com/anthropics/claude-code/issues/37862)).
+
 ## Stability
 
 These surfaces are contracts. Changes to any of them get a version bump, a CHANGELOG entry, and a deprecation path — never a quiet edit:
